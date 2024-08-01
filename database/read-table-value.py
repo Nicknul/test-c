@@ -10,9 +10,14 @@ def read_table_values(db_name, table_name):
         cursor.execute(f"SELECT * FROM {table_name}")  # f-string 포맷팅을 사용해서 table_name을 쿼리에 포함시킨다.
         rows = cursor.fetchall()  # 모든 행을 가져온다.
         
-        # 조회된 데이터를 출력
+        # 컬럼 이름 가져오기
+        cursor.execute(f"PRAGMA table_info({table_name})")  # 테이블의 컬럼 정보를 가져온다.
+        columns = [column[1] for column in cursor.fetchall()]  # 컬럼 이름을 리스트로 저장한다.
+        
+        # 조회된 데이터를 정돈하여 출력
         for row in rows:
-            print(row[0])  # 각 행을 출력한다.
+            row_dict = {columns[i]: row[i] for i in range(len(columns))}  # 각 행을 사전 형태로 변환한다.
+            print(row_dict)  # 변환된 행을 출력한다.
         
         print("모든 데이터를 성공적으로 조회했습니다.")  # 조회 성공 메시지를 출력한다.
     except sqlite3.Error as e:  # 예외가 발생하면
