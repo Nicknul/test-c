@@ -11,13 +11,19 @@ def read_table_values(db_name, table_name):
         rows = cursor.fetchall()  # 모든 행을 가져온다.
         
         # 컬럼 이름 가져오기
-        cursor.execute(f"PRAGMA table_info({table_name})")  # 테이블의 컬럼 정보를 가져온다.
-        columns = [column[1] for column in cursor.fetchall()]  # 컬럼 이름을 리스트로 저장한다.
+        cursor.execute(f"PRAGMA table_info({table_name})")  # 테이블 정보 조회
+        columns = [info[1] for info in cursor.fetchall()]  # 컬럼 이름 리스트
         
-        # 조회된 데이터를 정돈하여 출력
-        for row in rows:
-            row_dict = {columns[i]: row[i] for i in range(len(columns))}  # 각 행을 사전 형태로 변환한다.
-            print(row_dict)  # 변환된 행을 출력한다.
+        # 조회된 데이터를 정돈된 형식으로 출력
+        formatted_data = {col: {f'a': row[0], f'b': row[1]} for col, row in zip(columns, zip(*rows))}
+        
+        print(f"{table_name} : {{")  # 테이블 이름 출력
+        for col, vals in formatted_data.items():
+            print(f"  {col} : {{")  # 컬럼 이름 출력
+            for k, v in vals.items():
+                print(f"    {k} : {v},")  # 각 값 출력
+            print("  },")
+        print("}")
         
         print("모든 데이터를 성공적으로 조회했습니다.")  # 조회 성공 메시지를 출력한다.
     except sqlite3.Error as e:  # 예외가 발생하면
