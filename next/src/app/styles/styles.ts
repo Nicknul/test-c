@@ -1,7 +1,6 @@
 const styles = {
-  mainContainer: 'min-h-screen flex flex-col items-center justify-start bg-gray-100 space-y-6',
+  mainContainer: 'min-h-screen flex flex-col items-center justify-start bg-gray-100',
   content: 'bg-white p-5 w-full max-w-none flex flex-col items-center',
-  heading: 'text-2xl font-bold mb-6 text-center',
   error: 'mt-4 text-center text-red-500',
   form: 'space-y-4 flex items-center w-full',
   formRow: 'flex items-center justify-center space-x-4 w-full',
@@ -15,6 +14,7 @@ const styles = {
   tableHeaderCell: 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
   tableBody: 'bg-white divide-y divide-gray-200',
   tableDataCell: 'px-6 py-4 whitespace-nowrap text-sm text-gray-500',
+  toggleButton: 'self-end mt-4 text-gray-800 font-bold py-2 px-4 rounded',
 };
 
 export default styles;
