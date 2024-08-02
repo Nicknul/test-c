@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Optional
 from models import SearchRequest, UserDTO, TableRequest
-from database import search_users_by_name, get_table_names, search_data_by_table_and_name
+from database import search_users_by_name, get_table_names, search_data_by_table_and_value
 
 user_router = APIRouter()
 
@@ -31,7 +31,7 @@ data_router = APIRouter()
 @data_router.post("/data", response_model=List[Dict])
 async def get_data(request: TableRequest):
     try:
-        rows = search_data_by_table_and_name(request.table, request.name)
+        rows = search_data_by_table_and_value(request.table, request.name)
         if not rows:
             raise HTTPException(status_code=404, detail="Data not found")
         return rows
