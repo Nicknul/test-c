@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import user_router, table_router, data_router  # user_router, table_router, data_router를 불러온다.
+from routers import table_router, data_router  # user_router, table_router, data_router를 불러온다.
 
 app = FastAPI()
 
@@ -18,7 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(user_router)  # user_router를 추가한다.
 app.include_router(table_router)  # table_router를 추가한다.
 app.include_router(data_router)  # data_router를 추가한다.
 
