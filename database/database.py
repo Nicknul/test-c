@@ -1,4 +1,4 @@
-import sqlite3  # sqlite3 라이브러리를 불러온다.
+import sqlite3
 from typing import List, Dict
 
 def connect_db():
@@ -29,3 +29,27 @@ def get_table_names(db_name: str) -> List[str]:
     finally:
         if conn:
             conn.close()
+
+def search_data_by_table_and_name(table: str, name: str) -> List[Dict]:
+    conn = connect_db()
+    try:
+        cursor = conn.cursor()
+
+        # 테이블의 컬럼 이름들을 조회한다
+        cursor.execute(f"PRAGMA table_info({table})")
+        columns_info = cursor.fetchall()
+        column_names = [col['name'] for col in columns_info]
+
+        # '이름' 컬럼이 테이블에 있는지 확인한다
+        if '이름' in column_names:
+            query = f"SELECT * FROM {table} WHERE 이름 = ?"
+            cursor.execute(query, (name,))
+        else:
+            # '이름' 컬럼이 없으면 기본적인 검색 쿼리를 사용한다
+            query = f"SELECT * FROM {table} WHERE {column_names[0]} = ?"
+            cursor.execute(query, (name,))
+        
+        rows = cursor.fetchall()
+        return [dict(row) for row in rows]
+    finally:
+        conn.close()
