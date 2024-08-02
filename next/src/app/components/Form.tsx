@@ -13,31 +13,33 @@ interface FormProps {
 const Form: React.FC<FormProps> = ({ handleSubmit, name, setName, selectedTable, setSelectedTable, tables }) => {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <label htmlFor="table-select" className={styles.label}>
-        Select a Table
-      </label>
-      <select
-        id="table-select"
-        value={selectedTable}
-        onChange={(e) => setSelectedTable(e.target.value)}
-        className={styles.select}
-      >
-        {tables.map((table) => (
-          <option key={table} value={table}>
-            {table}
-          </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-        className={styles.input}
-      />
-      <button type="submit" className={styles.button}>
-        Submit
-      </button>
+      <div className={styles.formRow}>
+        <label htmlFor="table-select" className={styles.label}>
+          Table Name
+        </label>
+        <select
+          id="table-select"
+          value={selectedTable}
+          onChange={(e) => setSelectedTable(e.target.value)}
+          className={styles.select}
+        >
+          {tables.map((table) => (
+            <option key={table} value={table}>
+              {table}
+            </option>
+          ))}
+        </select>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Search"
+          className={styles.input}
+        />
+        <button type="submit" className={styles.button}>
+          Submit
+        </button>
+      </div>
     </form>
   );
 };
