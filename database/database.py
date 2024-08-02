@@ -30,7 +30,7 @@ def get_table_names(db_name: str) -> List[str]:
         if conn:
             conn.close()
 
-def search_data_by_table_and_value(table: str, value: str) -> List[Dict]:
+def search_data_by_table_and_value(table: str, value: str = None) -> List[Dict]:
     conn = connect_db()
     try:
         cursor = conn.cursor()
@@ -40,10 +40,15 @@ def search_data_by_table_and_value(table: str, value: str) -> List[Dict]:
         columns_info = cursor.fetchall()
         column_names = [col['name'] for col in columns_info]
 
-        # 모든 컬럼을 검색하는 쿼리 생성
-        query_parts = [f"{col} LIKE ?" for col in column_names]
-        query = f"SELECT * FROM {table} WHERE {' OR '.join(query_parts)}"
-        cursor.execute(query, [f"%{value}%"] * len(column_names))
+        if value:
+            # 모든 컬럼을 검색하는 쿼리 생성
+            query_parts = [f"{col} LIKE ?" for col in column_names]
+            query = f"SELECT * FROM {table} WHERE {' OR '.join(query_parts)}"
+            cursor.execute(query, [f"%{value}%"] * len(column_names))
+        else:
+            # 값이 없으면 모든 데이터를 조회한다
+            query = f"SELECT * FROM {table}"
+            cursor.execute(query)
 
         rows = cursor.fetchall()
         return [dict(row) for row in rows]
