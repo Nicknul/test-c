@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import DataTable from './components/DataTable';
 import Form from './components/Form';
+import ToggleButton from './components/ToggleButton';
 import styles from './styles/styles';
 
 interface UserDTO {
@@ -15,6 +16,7 @@ export default function Home() {
   const [error, setError] = useState('');
   const [tables, setTables] = useState<string[]>([]);
   const [selectedTable, setSelectedTable] = useState('');
+  const [isFormOpen, setIsFormOpen] = useState(true);
 
   useEffect(() => {
     const fetchTables = async () => {
@@ -58,19 +60,26 @@ export default function Home() {
     }
   };
 
+  const toggleForm = () => {
+    setIsFormOpen(!isFormOpen);
+  };
+
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.content}>
-        <Form
-          handleSubmit={handleSubmit}
-          name={name}
-          setName={setName}
-          selectedTable={selectedTable}
-          setSelectedTable={setSelectedTable}
-          tables={tables}
-        />
-        {error && <p className={styles.error}>{error}</p>}
-      </div>
+      {isFormOpen && (
+        <div className={styles.content}>
+          <Form
+            handleSubmit={handleSubmit}
+            name={name}
+            setName={setName}
+            selectedTable={selectedTable}
+            setSelectedTable={setSelectedTable}
+            tables={tables}
+          />
+          {error && <p className={styles.error}>{error}</p>}
+        </div>
+      )}
+      <ToggleButton isOpen={isFormOpen} onClick={toggleForm} />
       <DataTable data={data} />
     </div>
   );
