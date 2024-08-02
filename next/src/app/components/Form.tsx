@@ -15,7 +15,7 @@ const Form: React.FC<FormProps> = ({ handleSubmit, name, setName, selectedTable,
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formRow}>
         <label htmlFor="table-select" className={styles.label}>
-          Table Name
+          Table
         </label>
         <select
           id="table-select"
