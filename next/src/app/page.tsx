@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-// UserDTO 타입 정의
 interface UserDTO {
   이름: string;
   아이디: string;
@@ -11,8 +10,27 @@ interface UserDTO {
 
 export default function Home() {
   const [name, setName] = useState('');
-  const [users, setUsers] = useState<UserDTO[]>([]); // users 상태의 타입을 UserDTO 배열로 정의
+  const [users, setUsers] = useState<UserDTO[]>([]);
   const [error, setError] = useState('');
+  const [tables, setTables] = useState<string[]>([]);
+  const [selectedTable, setSelectedTable] = useState('');
+
+  useEffect(() => {
+    const fetchTables = async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/tables');
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data: string[] = await res.json();
+        setTables(data);
+        setSelectedTable(data[0] || '');
+      } catch (error) {
+        setError('Failed to fetch tables');
+      }
+    };
+    fetchTables();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +47,7 @@ export default function Home() {
         throw new Error('Network response was not ok');
       }
 
-      const data: UserDTO[] = await res.json(); // 응답 데이터를 UserDTO 배열로 지정
+      const data: UserDTO[] = await res.json();
       setUsers(data);
       setError('');
     } catch (error) {
@@ -43,6 +61,21 @@ export default function Home() {
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Search User in FastAPI</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <label htmlFor="table-select" className="block text-sm font-medium text-gray-700">
+            Select a Table
+          </label>
+          <select
+            id="table-select"
+            value={selectedTable}
+            onChange={(e) => setSelectedTable(e.target.value)}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {tables.map((table) => (
+              <option key={table} value={table}>
+                {table}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             value={name}
