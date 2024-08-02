@@ -59,9 +59,8 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.mainContainer}>
       <div className={styles.content}>
-        <h1 className={styles.heading}>Search Data in FastAPI</h1>
         <Form
           handleSubmit={handleSubmit}
           name={name}
@@ -71,8 +70,8 @@ export default function Home() {
           tables={tables}
         />
         {error && <p className={styles.error}>{error}</p>}
-        <DataTable data={data} />
       </div>
+      <DataTable data={data} />
     </div>
   );
 }
