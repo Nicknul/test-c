@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from typing import List, Dict
+from typing import List, Dict, Optional
 from models import SearchRequest, UserDTO, TableRequest
 from database import search_users_by_name, get_table_names, search_data_by_table_and_name
 
