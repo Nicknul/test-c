@@ -3,14 +3,12 @@
 import { useEffect, useState } from 'react';
 
 interface UserDTO {
-  이름: string;
-  아이디: string;
-  비밀번호: number;
+  [key: string]: string | number; // 다양한 스키마를 지원하기 위해 필드의 키와 값을 유연하게 설정
 }
 
 export default function Home() {
   const [name, setName] = useState('');
-  const [users, setUsers] = useState<UserDTO[]>([]);
+  const [data, setData] = useState<UserDTO[]>([]);
   const [error, setError] = useState('');
   const [tables, setTables] = useState<string[]>([]);
   const [selectedTable, setSelectedTable] = useState('');
@@ -35,12 +33,12 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://127.0.0.1:8000/search', {
+      const res = await fetch('http://127.0.0.1:8000/data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ table: selectedTable, name }),
       });
 
       if (!res.ok) {
@@ -48,18 +46,18 @@ export default function Home() {
       }
 
       const data: UserDTO[] = await res.json();
-      setUsers(data);
+      setData(data);
       setError('');
     } catch (error) {
       setError('Failed to fetch data');
-      setUsers([]);
+      setData([]);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Search User in FastAPI</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Search Data in FastAPI</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <label htmlFor="table-select" className="block text-sm font-medium text-gray-700">
             Select a Table
@@ -93,13 +91,15 @@ export default function Home() {
         </form>
         {error && <p className="mt-4 text-center text-red-500">{error}</p>}
         <div className="mt-6">
-          {users.length > 0 && (
+          {data.length > 0 && (
             <ul className="space-y-2">
-              {users.map((user, index) => (
+              {data.map((item, index) => (
                 <li key={index} className="p-4 bg-gray-200 rounded-md">
-                  <p>이름: {user.이름}</p>
-                  <p>아이디: {user.아이디}</p>
-                  <p>비밀번호: {user.비밀번호}</p>
+                  {Object.entries(item).map(([key, value]) => (
+                    <p key={key}>
+                      <strong>{key}:</strong> {value}
+                    </p>
+                  ))}
                 </li>
               ))}
             </ul>
